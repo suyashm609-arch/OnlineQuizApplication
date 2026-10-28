@@ -368,11 +368,23 @@ timer.start();
             return;
         }
 
-        for (int i = 0; i < 4; i++) {
-            if (buttons[i].isSelected() && i == answers[index]) {
-                score++;
-            }
+        
+for (int i = 0; i < 4; i++) {
+    if (buttons[i].isSelected()) {
+        if (i == answers[index]) {
+            score++;
+            JOptionPane.showMessageDialog(
+                this, "Correct Answer! 🎉");
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Incorrect Answer!\nCorrect answer: "
+                + options[index][answers[index]]);
         }
+        break;
+    }
+}
+
 
         timer.stop();
 
@@ -391,14 +403,29 @@ timer.start();
 }
         int percentage = score * 100 / questions.length;
 
-        JOptionPane.showMessageDialog(
-            this,
-            "Quiz Completed!\n\n"
-            + "Your Score: " + score + "/" + questions.length
-            + "\nPercentage: " + percentage + "%",
-            "Quiz Results",
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        String message;
+
+if (percentage >= 80) {
+    message = "Excellent! Great job!";
+} else if (percentage >= 60) {
+    message = "Good job! Keep it up!";
+} else if (percentage >= 40) {
+    message = "Nice try! Keep practicing!";
+} else {
+    message = "Keep learning! Try again!";
+}
+
+       
+JOptionPane.showMessageDialog(
+    this,
+    "🏆 Quiz Completed!\n\n"
+    + "Your Score: " + score + "/" + questions.length
+    + "\nPercentage: " + percentage + "%"
+    + "\n\n" + message,
+    "Quiz Results",
+    JOptionPane.INFORMATION_MESSAGE
+);
+
 
         int choice = JOptionPane.showConfirmDialog(
             this,

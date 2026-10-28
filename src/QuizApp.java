@@ -33,9 +33,9 @@ ButtonGroup group;
 JButton nextButton;
 
 JProgressBar progressBar;
+
 Timer timer;
 int timeLeft = 15;
- 
     public QuizApp() {
         setTitle("Online Quiz Application");
         setSize(600, 420);
@@ -143,9 +143,156 @@ add(centerPanel, BorderLayout.CENTER);
         bottomPanel.add(nextButton);
         add(bottomPanel, BorderLayout.PAGE_END);
 
-        showQuestion();
+        showWelcomeScreen();
         setVisible(true);
     }
+
+    
+void showWelcomeScreen() {
+    getContentPane().removeAll();
+    setLayout(new BorderLayout());
+
+    JLabel title = new JLabel("ONLINE QUIZ", JLabel.CENTER);
+    title.setFont(new Font("Arial", Font.BOLD, 28));
+    title.setForeground(Color.WHITE);
+    title.setOpaque(true);
+    title.setBackground(blue);
+    title.setBorder(
+        BorderFactory.createEmptyBorder(25, 10, 25, 10)
+    );
+
+    JLabel welcome = new JLabel(
+        "<html><center>Welcome to the Quiz!<br><br>"
+        + "Test your knowledge and challenge yourself."
+        + "</center></html>",
+        JLabel.CENTER
+    );
+    welcome.setFont(new Font("Arial", Font.BOLD, 20));
+    welcome.setForeground(new Color(30, 41, 59));
+
+    JLabel instructions = new JLabel(
+        "<html><center>"
+        + "Total Questions: " + questions.length
+        + "<br><br>Time: 15 seconds per question"
+        + "<br><br>Choose the correct option and finish the quiz!"
+        + "</center></html>",
+        JLabel.CENTER
+    );
+    instructions.setFont(new Font("Arial", Font.PLAIN, 15));
+    instructions.setForeground(new Color(71, 85, 105));
+
+    JButton startButton = new JButton("START QUIZ");
+    startButton.setFont(new Font("Arial", Font.BOLD, 17));
+    startButton.setForeground(Color.WHITE);
+    startButton.setBackground(blue);
+    startButton.setFocusPainted(false);
+    startButton.setOpaque(true);
+    startButton.setBorderPainted(false);
+    startButton.setBorder(
+        BorderFactory.createEmptyBorder(14, 35, 14, 35)
+    );
+
+    
+startButton.addActionListener(e -> {
+    index = 0;
+    score = 0;
+
+    getContentPane().removeAll();
+    buildQuizScreen();
+    showQuestion();
+});
+
+
+    JPanel center = new JPanel(new GridLayout(2, 1, 10, 10));
+    center.setBackground(background);
+    center.setBorder(
+        BorderFactory.createEmptyBorder(25, 20, 25, 20)
+    );
+    center.add(welcome);
+    center.add(instructions);
+
+    JPanel bottom = new JPanel();
+    bottom.setBackground(Color.WHITE);
+    bottom.setBorder(
+        BorderFactory.createEmptyBorder(15, 10, 15, 10)
+    );
+    bottom.add(startButton);
+
+    add(title, BorderLayout.NORTH);
+    add(center, BorderLayout.CENTER);
+    add(bottom, BorderLayout.SOUTH);
+
+    revalidate();
+    repaint();
+}
+
+
+void buildQuizScreen() {
+    setLayout(new BorderLayout());
+
+    JLabel header = new JLabel(
+        "ONLINE QUIZ APPLICATION", JLabel.CENTER
+    );
+    header.setFont(new Font("Arial", Font.BOLD, 21));
+    header.setForeground(Color.WHITE);
+    header.setOpaque(true);
+    header.setBackground(blue);
+    header.setBorder(
+        BorderFactory.createEmptyBorder(20, 10, 20, 10)
+    );
+
+    JPanel questionPanel = new JPanel(
+        new GridLayout(2, 1, 5, 12)
+    );
+    questionPanel.setBackground(background);
+    questionPanel.setBorder(
+        BorderFactory.createEmptyBorder(20, 25, 10, 25)
+    );
+    questionPanel.add(progressLabel);
+    questionPanel.add(questionLabel);
+
+    JPanel optionsPanel = new JPanel(
+        new GridLayout(4, 1, 8, 8)
+    );
+    optionsPanel.setBackground(background);
+    optionsPanel.setBorder(
+        BorderFactory.createEmptyBorder(5, 25, 15, 25)
+    );
+
+    for (int i = 0; i < 4; i++) {
+        optionsPanel.add(buttons[i]);
+    }
+
+    JPanel centerPanel = new JPanel(new BorderLayout());
+    centerPanel.setBackground(background);
+    centerPanel.add(questionPanel, BorderLayout.NORTH);
+    centerPanel.add(optionsPanel, BorderLayout.CENTER);
+
+    JPanel statusPanel = new JPanel(
+        new GridLayout(2, 1, 5, 5)
+    );
+    statusPanel.setBackground(Color.WHITE);
+    statusPanel.setBorder(
+        BorderFactory.createEmptyBorder(10, 25, 10, 25)
+    );
+    statusPanel.add(timerLabel);
+    statusPanel.add(progressBar);
+
+    centerPanel.add(statusPanel, BorderLayout.SOUTH);
+
+    JPanel bottomPanel = new JPanel();
+    bottomPanel.setBackground(Color.WHITE);
+    bottomPanel.add(nextButton);
+
+    add(header, BorderLayout.NORTH);
+    add(centerPanel, BorderLayout.CENTER);
+    add(bottomPanel, BorderLayout.SOUTH);
+
+    revalidate();
+    repaint();
+}
+
+
 
     void showQuestion() {
         progressLabel.setText(

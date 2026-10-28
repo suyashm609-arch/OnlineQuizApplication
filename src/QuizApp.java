@@ -1,27 +1,46 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class QuizApp extends JFrame {
 
-    String[] questions = {
-        "Which language is used for Android development?",
-        "Which keyword creates an object in Java?",
-        "Which data type stores true or false?",
-        "Which method is the starting point of Java?"
-    };
+    
+String[] questions = {
+    "Which language is used for Android development?",
+    "Which keyword creates an object in Java?",
+    "Which data type stores true or false?",
+    "Which method is the starting point of Java?",
+    "Which symbol ends a Java statement?",
+    "Which keyword is used to inherit a class?",
+    "Which loop runs while a condition is true?",
+    "Which collection stores unique elements?",
+    "Which keyword is used to create a subclass object?",
+    "Which company developed Java?"
+};
 
-    String[][] options = {
-        {"HTML", "Java", "CSS", "SQL"},
-        {"class", "new", "void", "static"},
-        {"int", "String", "boolean", "char"},
-        {"start()", "run()", "main()", "begin()"}
-    };
+String[][] options = {
+    {"HTML", "Java", "CSS", "SQL"},
+    {"class", "new", "void", "static"},
+    {"int", "String", "boolean", "char"},
+    {"start()", "run()", "main()", "begin()"},
+    {".", ";", ":", ","},
+    {"this", "super", "extends", "implements"},
+    {"for", "while", "switch", "break"},
+    {"ArrayList", "Array", "HashSet", "String"},
+    {"new", "class", "extends", "static"},
+    {"Google", "Microsoft", "Sun Microsystems", "Apple"}
+};
 
-    int[] answers = {1, 1, 2, 2};
+int[] answers = {1, 1, 2, 2, 1, 2, 1, 2, 0, 2};
+
 
     int index = 0;
     int score = 0;
+    int highScore = loadHighScore();
 
     Color blue = new Color(37, 99, 235);
     Color background = new Color(245, 248, 255);
@@ -259,9 +278,22 @@ void buildQuizScreen() {
         BorderFactory.createEmptyBorder(5, 25, 15, 25)
     );
 
-    for (int i = 0; i < 4; i++) {
-        optionsPanel.add(buttons[i]);
-    }
+    
+for (int i = 0; i < 4; i++) {
+    buttons[i].setBackground(Color.WHITE);
+    buttons[i].setForeground(new Color(40, 60, 90));
+    buttons[i].setFocusPainted(false);
+    buttons[i].setBorder(
+        BorderFactory.createLineBorder(new Color(37, 99, 235), 2)
+    );
+
+    buttons[i].setHorizontalAlignment(SwingConstants.LEFT);
+buttons[i].setMargin(new Insets(12, 15, 12, 15));
+buttons[i].setOpaque(true);
+
+    optionsPanel.add(buttons[i]);
+}
+
 
     JPanel centerPanel = new JPanel(new BorderLayout());
     centerPanel.setBackground(background);
@@ -305,9 +337,11 @@ void buildQuizScreen() {
 );
 
         questionLabel.setText(questions[index]);
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
         for (int i = 0; i < 4; i++) {
             buttons[i].setText(options[index][i]);
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 16));
         }
 
         group.clearSelection();
@@ -397,11 +431,46 @@ for (int i = 0; i < 4; i++) {
         }
     }
 
+    
+int loadHighScore() {
+    try {
+        File file = new File("highscore.txt");
+
+        if (file.exists()) {
+            Scanner sc = new Scanner(file);
+            int savedScore = sc.nextInt();
+            sc.close();
+            return savedScore;
+        }
+    } catch (IOException e) {
+        System.out.println("Error loading high score.");
+    }
+
+    return 0;
+}
+
+
+
+void saveHighScore() {
+    try {
+        FileWriter writer = new FileWriter("highscore.txt");
+        writer.write(String.valueOf(highScore));
+        writer.close();
+    } catch (IOException e) {
+        System.out.println("Error saving high score.");
+    }
+}
+
+
     void showResult() {
         if (timer != null) {
     timer.stop();
 }
         int percentage = score * 100 / questions.length;
+        if (score > highScore) {
+    highScore = score;
+    saveHighScore();
+}
 
         String message;
 
@@ -420,8 +489,11 @@ JOptionPane.showMessageDialog(
     this,
     "🏆 Quiz Completed!\n\n"
     + "Your Score: " + score + "/" + questions.length
-    + "\nPercentage: " + percentage + "%"
-    + "\n\n" + message,
+   
++ "\nPercentage: " + percentage + "%"
++ "\nHigh Score: " + highScore + "/" + questions.length
++ "\n\n" + message,
+
     "Quiz Results",
     JOptionPane.INFORMATION_MESSAGE
 );
